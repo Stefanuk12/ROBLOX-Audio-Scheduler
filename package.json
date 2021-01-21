@@ -1,0 +1,36 @@
+{
+  "name": "roblox-audio-scheduler",
+  "version": "1.0.0",
+  "description": "Schedule when to upload an audio.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stefanuk12/ROBLOX-Audio-Scheduler.git"
+  },
+  "keywords": [
+    "roblox",
+    "audio",
+    "scheduler",
+    "typescript",
+    "javascript"
+  ],
+  "author": "Stefanuk12",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Stefanuk12/ROBLOX-Audio-Scheduler/issues"
+  },
+  "homepage": "https://github.com/Stefanuk12/ROBLOX-Audio-Scheduler#readme",
+  "dependencies": {
+    "got": "^11.8.1",
+    "tough-cookie": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/tough-cookie": "^4.0.0"
+  }
+}
