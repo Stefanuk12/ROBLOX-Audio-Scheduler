@@ -24,7 +24,7 @@ export class AudioSchedule {
     // Constructor
     constructor(cookie: string){
         this.cookie = cookie;
-        this.init()
+        this.init();
     }
 
     // Initialiser
