@@ -1,7 +1,7 @@
 // Dependencies
 import got from "got/dist/source";
 import * as fs from "fs";
-const FormData = require("form-data")
+import FormData from "form-data";
 
 // Simple wait function
 function wait(ms: number) {
