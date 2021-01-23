@@ -72,7 +72,7 @@ export class AudioSchedule {
         // Config
         const config = {
             name: "string",
-            file: "string",
+            file: data.audio.toString(),
             paymentSource: "User",
             estimatedFileSize: data.audio.length
         };
