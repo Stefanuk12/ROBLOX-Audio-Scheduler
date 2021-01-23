@@ -24,7 +24,6 @@ export class AudioSchedule {
         this.cookie = cookie;
 
         this.csrf = await this.getCSRF(this.cookie);
-        console.log("Got CSRF: " + this.csrf)
 
         this.HttpClient = got.extend({
             prefixUrl: "https://publish.roblox.com/v1/",
@@ -120,6 +119,8 @@ export class AudioSchedule {
 
         // Uploading audio
         const response = await this.audio(data);
-        console.log(response);
+        
+        // Return
+        return response
     }
 }
