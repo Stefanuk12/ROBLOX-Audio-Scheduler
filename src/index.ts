@@ -59,34 +59,32 @@ export class AudioSchedule {
             throw("Make sure your cookie is valid!");
         }
 
-        // Config
-        const config = {
-            apple: [{
-                type: "Audio",
-                name: data.name,
-                description: data.description
-            }]
-        };
-
         // Form Data
         const form = new FormData();
-        const formName = "Content-Disposition: form-data; name=\"uploadAssetRequest.files\"; filename=\"" + data.filename + "." + data.filetype + "\"\nContent-Type: audio/" + (data.filetype == "mp3" && "mpeg" || "ogg")
-        console.log(formName)
-        form.append(formName, data.audio);
-        form.append("config.json", JSON.stringify(config));
+        form.append("__RequestVerificationToken", "_Fva1hxkC29aH4m6xWoBZ5RLJTR627TdZCvSvj1iTD4TjMqSGh0mL7diVImyf2eRh67AphJxWeBZVgliA5djeDDTMzNzyka1EYK_XZ9e08y5E2uP0")
+        form.append("assetTypeId", 3)
+        form.append("isOggUploadEnabled", (data.filetype == "ogg" && "True" || "False"))
+        form.append("groupId", " ")
+        form.append("onVerificationPage", "False")
+        form.append("captchaEnabled", "False")
+        form.append("captchaToken", " ")
+        form.append("captchaProvider", " ")
+        const formFileName = `Content-Disposition: form-data; name="file"; filename="${data.filename}.${data.filetype}"\nContent-Type: audio/${(data.filetype == "ogg" && "ogg" || "mpeg")}`
+        form.append(formFileName, data.audio)
+        form.append("name", data.name)
 
-        // Uploading
-        const response = got.post("https://publish.roblox.com/v1/assets/upload", {
-            headers: {
-                Cookie: ".ROBLOSECURITY=" + this.cookie + ";",
-                "X-CSRF-TOKEN": this.csrf,
-                "Content-Type": "multipart/form-data",
-                "Accept": "application/json"
-            },
-            body: form,
+        const options = {
+            host: "www.roblox.com",
+            path: "/build/upload",
+            headers: {Cookie: ".ROBLOSECURITY=" + this.cookie}
+        }
+
+        form.submit(options, function(err, res) {
+            if (err) throw err;
+            res.on('data', function (chunk) {
+                console.log('BODY: ' + chunk);
+            });
         });
-
-        return response;
     }
 
     // Schedule audio
@@ -102,7 +100,6 @@ export class AudioSchedule {
 
         // Uploading audio
         const response = await this.uploadAudio(data);
-        const body = JSON.parse(response.body)
-        console.log(body);
+
     }
 }
