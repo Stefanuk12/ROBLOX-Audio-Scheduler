@@ -1,6 +1,6 @@
 {
   "name": "roblox-audio-scheduler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Schedule when to upload an audio.",
   "main": "index.js",
   "directories": {
