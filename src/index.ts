@@ -1,5 +1,5 @@
 // Dependencies
-import got from "got/dist/source";
+import got, { Got } from "got/dist/source";
 import * as fs from "fs";
 import FormData from "form-data";
 
@@ -10,7 +10,7 @@ function wait(ms: number) {
 
 // Interface
 export interface IAudioUpload {
-    audio: fs.ReadStream,
+    audio: Buffer,
     name: string,
     description: string,
     filename: string,
@@ -20,27 +20,36 @@ export interface IAudioUpload {
 // Class
 export class AudioSchedule {
     // Vars
-    cookie: string;
+    cookie: string = "";
     csrf: string = "";
-
-    // Constructor
-    constructor(cookie: string){
-        this.cookie = cookie;
-        this.init();
-    }
+    HttpClient: Got = got;
 
     // Initialiser
-    async init(){
+    async init(cookie: string){
+        this.cookie = cookie;
+
         this.csrf = await this.getCSRF(this.cookie);
+        console.log("Got CSRF: " + this.csrf)
+
+        this.HttpClient = got.extend({
+            prefixUrl: "https://publish.roblox.com/v1/",
+            headers: {
+                Cookie: `.ROBLOSECURITY=${cookie};`,
+                "X-CSRF-TOKEN": this.csrf,
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36 OPR/72.0.3815.473"
+            }
+        });
+
+        return this;
     }
 
     // Get CSRF
     async getCSRF(cookie: string){
         // Get Response
-        const response = await got.post("https://catalog.roblox.com/v1/catalog/items/details", {
+        const response = await got.post("https://auth.roblox.com/v2/logout", {
             throwHttpErrors: false,
             headers: {
-                cookie: ".ROBLOSECURITY=" + cookie
+                Cookie: `.ROBLOSECURITY=${cookie};`
             }
         });
 
@@ -52,39 +61,55 @@ export class AudioSchedule {
         }
     }
 
-    // Upload Audio
-    async uploadAudio(data: IAudioUpload){
+    // Audio idk
+    async audio(data: IAudioUpload){
         // Checking
-        if (this.csrf == ""){
-            throw("Make sure your cookie is valid!");
+        const canUpload = (await this.verify(data)).canAfford
+        if (canUpload == false){
+            throw("Cannot afford to upload this audio.")
         }
 
-        // Form Data
-        const form = new FormData();
-        form.append("__RequestVerificationToken", "_Fva1hxkC29aH4m6xWoBZ5RLJTR627TdZCvSvj1iTD4TjMqSGh0mL7diVImyf2eRh67AphJxWeBZVgliA5djeDDTMzNzyka1EYK_XZ9e08y5E2uP0")
-        form.append("assetTypeId", 3)
-        form.append("isOggUploadEnabled", (data.filetype == "ogg" && "True" || "False"))
-        form.append("groupId", " ")
-        form.append("onVerificationPage", "False")
-        form.append("captchaEnabled", "False")
-        form.append("captchaToken", " ")
-        form.append("captchaProvider", " ")
-        const formFileName = `Content-Disposition: form-data; name="file"; filename="${data.filename}.${data.filetype}"\nContent-Type: audio/${(data.filetype == "ogg" && "ogg" || "mpeg")}`
-        form.append(formFileName, data.audio)
-        form.append("name", data.name)
+        // Config
+        const config = {
+            name: "string",
+            file: "string",
+            paymentSource: "User",
+            estimatedFileSize: data.audio.length
+        };
 
-        const options = {
-            host: "www.roblox.com",
-            path: "/build/upload",
-            headers: {Cookie: ".ROBLOSECURITY=" + this.cookie}
-        }
-
-        form.submit(options, function(err, res) {
-            if (err) throw err;
-            res.on('data', function (chunk) {
-                console.log('BODY: ' + chunk);
-            });
+        // Response
+        const response = await this.HttpClient.post("audio", {
+            throwHttpErrors: false,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(config)
         });
+
+        return JSON.parse(response.body);
+    }
+    
+    // Verify
+    async verify(data: IAudioUpload){
+        // Config
+        const config = {
+            name: "string",
+            file: "string",
+            paymentSource: "User",
+            fileSize: data.audio.length,
+            duration: 4
+        }
+
+        // Response
+        const response = await this.HttpClient.post("audio/verify", {
+            throwHttpErrors: false,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(config)
+        });
+
+        return JSON.parse(response.body);
     }
 
     // Schedule audio
@@ -99,7 +124,7 @@ export class AudioSchedule {
         await wait(waitTime);
 
         // Uploading audio
-        const response = await this.uploadAudio(data);
-
+        const response = await this.audio(data);
+        console.log(response);
     }
 }
