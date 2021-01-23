@@ -100,6 +100,7 @@ export class AudioSchedule {
 
         // Uploading audio
         const response = await this.uploadAudio(data);
-        console.log(response.body);
+        const body = JSON.parse(response.body)
+        console.log(body);
     }
 }
