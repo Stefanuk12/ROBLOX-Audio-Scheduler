@@ -1,6 +1,6 @@
 {
   "name": "roblox-audio-scheduler",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Schedule when to upload an audio.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -23,6 +23,7 @@
   ],
   "author": "Stefanuk12",
   "license": "MIT",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/Stefanuk12/ROBLOX-Audio-Scheduler/issues"
   },
