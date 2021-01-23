@@ -1,5 +1,7 @@
 // Dependencies
 import got from "got/dist/source";
+import * as fs from "fs";
+const FormData = require("form-data")
 
 // Simple wait function
 function wait(ms: number) {
@@ -8,7 +10,7 @@ function wait(ms: number) {
 
 // Interface
 export interface IAudioUpload {
-    audio: Buffer,
+    audio: fs.ReadStream,
     name: string,
     description: string,
     filename: string,
@@ -67,7 +69,7 @@ export class AudioSchedule {
         };
 
         // Form Data
-        const form = new URLSearchParams();
+        const form = new FormData();
         form.append("Content-Disposition: form-data; name=\"uploadAssetRequest.files\"; filename=\"" + data.filename + "." + data.filetype + "Content-Type: audio/" + (data.filetype == "mp3" && "mpeg" || "ogg"), data.audio.toString());
         form.append("config.json", JSON.stringify(config));
 
@@ -75,9 +77,11 @@ export class AudioSchedule {
         const response = got.post("https://publish.roblox.com/v1/assets/upload", {
             headers: {
                 Cookie: ".ROBLOSECURITY=" + this.cookie + ";",
-                "X-CSRF-TOKEN": this.csrf
+                "X-CSRF-TOKEN": this.csrf,
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json"
             },
-            form: form,
+            body: form,
         });
 
         return response;
