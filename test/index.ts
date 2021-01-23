@@ -17,9 +17,6 @@ function wait(ms: number) {
     // Upload
     await uploader.scheduleAudio({
         audio: file,
-        name: "test",
-        description: "test",
-        filename: "test",
-        filetype: "ogg"
+        name: "test"
     }, new Date());
 })();

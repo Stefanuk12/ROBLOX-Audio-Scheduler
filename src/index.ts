@@ -9,10 +9,7 @@ function wait(ms: number) {
 // Interface
 export interface IAudioUpload {
     audio: Buffer,
-    name: string,
-    description: string,
-    filename: string,
-    filetype: "mp3" | "ogg"
+    name: string
 }
 
 // Class
