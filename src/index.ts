@@ -70,7 +70,9 @@ export class AudioSchedule {
 
         // Form Data
         const form = new FormData();
-        form.append("Content-Disposition: form-data; name=\"uploadAssetRequest.files\"; filename=\"" + data.filename + "." + data.filetype + "Content-Type: audio/" + (data.filetype == "mp3" && "mpeg" || "ogg"), data.audio.toString());
+        const formName = "Content-Disposition: form-data; name=\"uploadAssetRequest.files\"; filename=\"" + data.filename + "." + data.filetype + "\"\nContent-Type: audio/" + (data.filetype == "mp3" && "mpeg" || "ogg")
+        console.log(formName)
+        form.append(formName, data.audio);
         form.append("config.json", JSON.stringify(config));
 
         // Uploading
