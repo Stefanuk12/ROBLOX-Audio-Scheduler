@@ -90,8 +90,7 @@ export class AudioSchedule {
             name: "string",
             file: "string",
             paymentSource: "User",
-            fileSize: data.audio.length,
-            duration: 4
+            fileSize: data.audio.length
         }
 
         // Response
