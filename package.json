@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/Stefanuk12/ROBLOX-Audio-Scheduler#readme",
   "dependencies": {
-    "form-data": "^3.0.0",
     "got": "^11.8.1"
   }
 }

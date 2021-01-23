@@ -1,7 +1,5 @@
 // Dependencies
 import got, { Got } from "got/dist/source";
-import * as fs from "fs";
-import FormData from "form-data";
 
 // Simple wait function
 function wait(ms: number) {
@@ -71,8 +69,8 @@ export class AudioSchedule {
 
         // Config
         const config = {
-            name: "string",
-            file: data.audio.toString(),
+            name: data.name,
+            file: data.audio.toString("base64"),
             paymentSource: "User",
             estimatedFileSize: data.audio.length
         };
