@@ -13,9 +13,13 @@
     "@types/node": "^14.14.22"
   },
   "scripts": {
-    "build": "node ./src/index.js",
-    "ts": "tsc"
+    "start": "node lib/index.js",
+    "postinstall": "tsc",
+    "watch-node": "nodemon lib/index.js",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
+  "engines": {"node": "14.10.1"},
   "keywords": [],
   "author": "Stefanuk12",
   "license": "MIT"
