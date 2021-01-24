@@ -6,6 +6,7 @@
   "types": "./lib/index.d.ts",
   "dependencies": {
     "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
     "got": "^11.8.1",
     "roblox-audio-scheduler": "^1.1.3"
   },
@@ -13,11 +14,8 @@
     "@types/node": "^14.14.22"
   },
   "scripts": {
-    "start": "node lib/index.js",
-    "build": "tsc",
-    "postinstall": "npm run build"
+    "build": "tsc"
   },
-  "engines": {"node": "14.10.1"},
   "keywords": [],
   "author": "Stefanuk12",
   "license": "MIT"
