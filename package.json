@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "node lib/index.js",
-    "postinstall": "tsc",
+    "postinstall": "tsc && mv -i -v src/Commands lib/ && rm -v -rf src",
     "watch-node": "nodemon lib/index.js",
     "watch-ts": "tsc -w",
     "deploy": "git add . && git commit -m Heroku && git push heroku master"
