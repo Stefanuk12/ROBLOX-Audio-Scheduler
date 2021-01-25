@@ -17,10 +17,12 @@ export interface ScheduledUpload {
 export class Scheduler {
     static queue: Array<ScheduledUpload> = []
 
+    // Add an audio to the queue
     async add(data: ScheduledUpload){
         Scheduler.queue.push(data);
     }
 
+    // Remove an audio from the queue
     async remove(data: ScheduledUpload){
         for (var i = 1; i < Scheduler.queue.length; i++){
             if (Scheduler.queue[i] == data){
@@ -29,6 +31,7 @@ export class Scheduler {
         }
     }
     
+    // Function to run all of the due audios in the queue
     async run(){
         const now = new Date();
 

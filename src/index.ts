@@ -25,11 +25,14 @@ client.on('message', (message) => {
 
     // Vars
     const args = message.content.slice(config.BotPrefix.length).trim().split(/ +/);
+
+    // This is needed because args?.shift()?. does not want to work
     if (args != undefined){
         const shiftedArgs = args.shift();
         if (shiftedArgs){
             const command = shiftedArgs.toLowerCase();
             if (command) {
+                // Resolving the command
                 const resolvedCommand = commands.resolve(command);
         
                 // Execute command
