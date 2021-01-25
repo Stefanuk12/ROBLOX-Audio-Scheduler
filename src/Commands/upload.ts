@@ -145,7 +145,7 @@ export const command = new Command(
             return;
         } else {
             // Check if it is a past date
-            if (now.getTime() > time.getTime()){
+            if (now > time){
                 const messageEmbed = new MessageEmbed()
                 .setColor('#ff6961')
                 .setTitle('Schedule audio')
