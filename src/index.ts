@@ -25,15 +25,20 @@ client.on('message', (message) => {
 
     // Vars
     const args = message.content.slice(config.BotPrefix.length).trim().split(/ +/);
-    const command = args?.shift()?.toLowerCase();
-    if (command) {
-        const resolvedCommand = commands.resolve(command);
-
-        // Execute command
-        if (resolvedCommand){
-            resolvedCommand.execute(message, args);
-        };
-    } 
+    if (args != undefined){
+        const shiftedArgs = args.shift();
+        if (shiftedArgs){
+            const command = shiftedArgs.toLowerCase();
+            if (command) {
+                const resolvedCommand = commands.resolve(command);
+        
+                // Execute command
+                if (resolvedCommand){
+                    resolvedCommand.execute(message, args);
+                };
+            } 
+        }
+    }
 });
 
 // Login
