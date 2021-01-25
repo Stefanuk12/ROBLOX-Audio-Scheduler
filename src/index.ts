@@ -5,7 +5,7 @@ import { Commands } from './Commands/command';
 import { config } from './config';
 
 // Client
-const client = new Discord.Client();
+export const client = new Discord.Client();
 
 // Commands
 export const commands: Commands = new Commands();
