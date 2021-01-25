@@ -33,7 +33,7 @@ Replace `yourbottokenhere` with your bot token. Capitals matter!
 
 ## Running the program
 
-Just run the following command in cmd/terminal in order, preferably as admin/root. It will install all of the necessary dependencies
+Just run the following command in cmd/terminal in order, preferably as admin/root, **while cd'd into the correct directory (where you installed the repo)**.
 ```bash
 ts-node src/index.ts
 ```
