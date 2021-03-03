@@ -1,6 +1,7 @@
 // Dependencies
 import got, { Got } from "got/dist/source";
 import FormData from "form-data"
+import { promisify } from "util"
 
 // Simple wait function
 function wait(ms: number) {
@@ -115,19 +116,37 @@ export class AudioSchedule {
         form.append("captchaEnabled", "False")
         form.append("captchaToken", "")
         form.append("captchaProvider", "")
-        form.append(`Content-Disposition: form-data; name="file"; filename="${data.name}.${data.filetype}"\nContent-Type: audio/${data.filetype == "ogg" && "ogg" || "mpeg"}`, data.audio)
+        form.append(`Content-Disposition: form-data; name="file"; filename="${data.name}.${data.filetype}"\nContent-Type: audio/${data.filetype == "ogg" && "ogg" || "mpeg"}`, data.audio.toString("base64"))
 
-        // Response
-        const response = await got.post("https://www.roblox.com/build/upload", {
+        var body = {data: "", finished: false}
+
+        // Get Response
+        const response = form.submit({
+            hostname: "www.roblox.com",
+            path: "/build/upload",
+            protocol: "https:",
             headers: {
-                Cookie: `.ROBLOXSECURITY=${this.cookie}`
-            },
-            body: form,
-        });
+                cookie: `.ROBLOSECURITY=${this.cookie};`
+            }
+        }, (err, response) => {
+            response.on("data", (data) => {
+                body.data += data
+            })
+            response.on("end", () => {
+                body.finished = true
+            })
+        })
 
-        const result = response.body.match(/uploadedId=(.+?)">here</)
+        // Botched solution I know
+        while (!body.finished){
+            await wait(100)
+        }
+
+        console.log(body.data)
+        const result = body.data.match(/uploadedId=(.+?)">here</)
         
         if (result){
+            console.log("sex", result)
             return result[1]
         }
     }
