@@ -126,7 +126,10 @@ export class AudioSchedule {
             path: "/build/upload",
             protocol: "https:",
             headers: {
-                cookie: `.ROBLOSECURITY=${this.cookie};`
+                cookie: `.ROBLOSECURITY=${this.cookie};`,
+                origin: "https://www.roblox.com",
+                referer: "https://www.roblox.com/build/upload?AssetTypeId=3&GroupId=",
+                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 OPR/73.0.3856.400"
             }
         }, (err, response) => {
             response.on("data", (data) => {
