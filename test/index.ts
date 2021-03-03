@@ -10,8 +10,9 @@ import * as fs from "fs"
     const uploader = await new AudioSchedule().init(cookie);
 
     // Upload
-    await uploader.scheduleAudio({
+    await uploader.audioNew({
         audio: file,
-        name: "test"
-    }, new Date());
+        name: "test_1",
+        filetype: "ogg"
+    });
 })();
