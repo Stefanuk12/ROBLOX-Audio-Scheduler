@@ -93,6 +93,12 @@ export class AudioSchedule {
 
     // Upload Audio via ROBLOX website
     async audioNew(data: IAudioUploadData2){ // this is a bit broken and idk how to fix it
+        /*
+            Notice: This does not work at the moment!
+                    It is likely with the body being formatted incorrectly or something. If you know how to help, please do!
+                    You may use the regular audio method for now but the endpoint is broken ATM and ROBLOX is working to fix it.
+        */
+
         // Checking
         const canUpload = (await this.verify({
             audio: data.audio,
