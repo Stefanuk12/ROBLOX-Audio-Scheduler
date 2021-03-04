@@ -128,7 +128,7 @@ export class AudioSchedule {
         // Options
         const options: OptionsOfTextResponseBody = {
             protocol: "https:",
-            port: "43",
+            port: "443",
             method: "POST",
             host: "www.roblox.com",
             path: "/build/upload",
