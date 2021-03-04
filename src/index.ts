@@ -1,7 +1,6 @@
 // Dependencies
 import got, { Got } from "got/dist/source";
 import FormData from "form-data"
-import { promisify } from "util"
 
 // Simple wait function
 function wait(ms: number) {
@@ -108,6 +107,7 @@ export class AudioSchedule {
 
         // Form Data
         const form = new FormData()
+        const fileUpload = `Content-Disposition: form-data; name="file"; filename="${data.name}.${data.filetype}"\nContent-Type: audio/${data.filetype == "ogg" && "ogg" || "mpeg"}`
         form.append("__RequestVerificationToken", RequestVerificationToken)
         form.append("assetTypeId", "3")
         form.append("isOggUploadEnabled", "True")
@@ -116,37 +116,24 @@ export class AudioSchedule {
         form.append("captchaEnabled", "False")
         form.append("captchaToken", "")
         form.append("captchaProvider", "")
-        form.append(`Content-Disposition: form-data; name="file"; filename="${data.name}.${data.filetype}"\nContent-Type: audio/${data.filetype == "ogg" && "ogg" || "mpeg"}`, data.audio.toString("base64"))
-
-        var body = {data: "", finished: false}
+        form.append("file", data.audio, {
+            filename: `${data.name}.${data.filetype}`,
+            contentType: `audio/${data.filetype == "ogg" && "ogg" || "mpeg"}`,
+        })
+        form.append("name", data.name)
 
         // Get Response
-        const response = form.submit({
-            hostname: "www.roblox.com",
-            path: "/build/upload",
-            protocol: "https:",
+        const response = await got.post("https://www.roblox.com/build/upload", {
+            followRedirect: false,
             headers: {
                 cookie: `.ROBLOSECURITY=${this.cookie};`,
-                origin: "https://www.roblox.com",
-                referer: "https://www.roblox.com/build/upload?AssetTypeId=3&GroupId=",
-                "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 OPR/73.0.3856.400"
-            }
-        }, (err, response) => {
-            response.on("data", (data) => {
-                body.data += data
-            })
-            response.on("end", () => {
-                body.finished = true
-            })
+            },
+            body: form
         })
 
-        // Botched solution I know
-        while (!body.finished){
-            await wait(100)
-        }
+        console.log(response.body)
 
-        console.log(body.data)
-        const result = body.data.match(/uploadedId=(.+?)">here</)
+        const result = response.body.match(/uploadedId=(.+?)">here</)
         
         if (result){
             console.log("sex", result)
