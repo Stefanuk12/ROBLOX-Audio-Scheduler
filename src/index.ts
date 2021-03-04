@@ -1,7 +1,6 @@
 // Dependencies
 import got, { Got, OptionsOfTextResponseBody } from "got/dist/source";
 import FormData from "form-data"
-import https from "https"
 
 // Simple wait function
 function wait(ms: number) {
@@ -143,7 +142,7 @@ export class AudioSchedule {
         }
 
         // Sending request
-        const response = await got.post("https://www.roblox.com/build/upload", options)
+        const response = await got.post(options)
     
         // Getting the redirect URL + SoundId
         const url = response.body.match(/<a href="(.+?)">here</) || ["Error", "Error"]
