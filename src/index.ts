@@ -1,6 +1,7 @@
 // Dependencies
-import got, { Got } from "got/dist/source";
+import got, { Got, OptionsOfTextResponseBody } from "got/dist/source";
 import FormData from "form-data"
+import https from "https"
 
 // Simple wait function
 function wait(ms: number) {
@@ -121,26 +122,38 @@ export class AudioSchedule {
         })
         form.append("name", data.name)
 
-        // Get Response
-        const response = await got.post("https://www.roblox.com/build/upload", {
-            followRedirect: false,
-            headers: {
-                host: "www.roblox.com",
-                "content-type": `multipart/form-data; boundary=${form.getBoundary()}`,
-                "content-length": form.getLengthSync().toString(),
-                cookie: `.ROBLOSECURITY=${this.cookie}; __RequestVerificationToken=${RequestVerificationToken}`,
-            },
-            body: form.getBuffer().toString("base64")
-        })
+        // Body
+        const body = form.getBuffer().toString("base64")
 
-        console.log(response.body)
-        console.log(response.request.options.body)
-        const result = response.body.match(/uploadedId=(.+?)">here</)
-        
-        if (result){
-            console.log("sex", result)
-            return result[1]
+        // Options
+        const options: OptionsOfTextResponseBody = {
+            protocol: "https:",
+            port: "43",
+            method: "POST",
+            host: "www.roblox.com",
+            path: "/build/upload",
+
+            headers: {
+                "content-type": `multipart/form-data; boundary=${form.getBoundary()}`,
+                cookie: `.ROBLOSECURITY=${this.cookie}; __RequestVerificationToken=${RequestVerificationToken}`
+            },
+            body: body,
+            
+            followRedirect: false
         }
+
+        // Sending request
+        const response = await got.post("https://www.roblox.com/build/upload", options)
+    
+        // Getting the redirect URL + SoundId
+        const url = response.body.match(/<a href="(.+?)">here</) || ["Error", "Error"]
+        const soundId = response.body.match(/uploadedId=(.+?)">here</) || ["Error", "Error"]
+        
+        console.log(url[1])
+        console.log(soundId[1])
+
+        // Returning SoundId
+        return soundId[1]
     }
 
     // Upload Audio
