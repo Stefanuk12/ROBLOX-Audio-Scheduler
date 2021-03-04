@@ -107,7 +107,6 @@ export class AudioSchedule {
 
         // Form Data
         const form = new FormData()
-        const fileUpload = `Content-Disposition: form-data; name="file"; filename="${data.name}.${data.filetype}"\nContent-Type: audio/${data.filetype == "ogg" && "ogg" || "mpeg"}`
         form.append("__RequestVerificationToken", RequestVerificationToken)
         form.append("assetTypeId", "3")
         form.append("isOggUploadEnabled", "True")
@@ -126,13 +125,16 @@ export class AudioSchedule {
         const response = await got.post("https://www.roblox.com/build/upload", {
             followRedirect: false,
             headers: {
-                cookie: `.ROBLOSECURITY=${this.cookie};`,
+                host: "www.roblox.com",
+                "content-type": `multipart/form-data; boundary=${form.getBoundary()}`,
+                "content-length": form.getLengthSync().toString(),
+                cookie: `.ROBLOSECURITY=${this.cookie}; __RequestVerificationToken=${RequestVerificationToken}`,
             },
-            body: form
+            body: form.getBuffer().toString("base64")
         })
 
         console.log(response.body)
-
+        console.log(response.request.options.body)
         const result = response.body.match(/uploadedId=(.+?)">here</)
         
         if (result){
